@@ -67,15 +67,6 @@ Through this project, we experienced the basic machine learning workflow, includ
 - Combined the two features into `fish_data`. </br>
 - Created `fish_target` manually to represent the fish species labels. </br>
 
-```python
-length = df.iloc[1:160, 3].astype(float)
-weight = df.iloc[1:160, 1].astype(float)
-
-fish_data = [[l, w] for l, w in zip(length, weight)]
-
-fish_target = [0]*35 + [1]*20 + [2]*6 + [3]*11 + [4]*67 + [5]*17 + [6]*14
-````
-
 * The target labels were defined as: </br>
 
   * `Bream`: 0 </br>
@@ -93,21 +84,6 @@ fish_target = [0]*35 + [1]*20 + [2]*6 + [3]*11 + [4]*67 + [5]*17 + [6]*14
 * Shuffled the index using `np.random.shuffle(index)`. </br>
 * Used the shuffled index to manually split the data into training and testing sets. </br>
 
-```python
-input_arr = np.array(fish_data)
-target_arr = np.array(fish_target)
-
-index = np.arange(len(input_arr))
-
-np.random.seed(42)
-np.random.shuffle(index)
-
-train_input = input_arr[index[:120]]
-train_target = target_arr[index[:120]]
-test_input = input_arr[index[120:]]
-test_target = target_arr[index[120:]]
-```
-
 * The first 120 shuffled samples were used for training. </br>
 * The remaining samples were used for testing. </br>
 
@@ -115,14 +91,6 @@ test_target = target_arr[index[120:]]
 
 * Calculated the mean and standard deviation of the training data. </br>
 * Standardized both training and testing data using the training mean and standard deviation. </br>
-
-```python
-mean = np.mean(train_input, axis=0)
-std = np.std(train_input, axis=0)
-
-train_scaled = (train_input - mean) / std
-test_scaled = (test_input - mean) / std
-```
 
 * Standardization was applied because KNN is distance-based, and feature scale can affect nearest-neighbor calculation. </br>
 
@@ -132,29 +100,11 @@ test_scaled = (test_input - mean) / std
 * Set `n_neighbors=6` for the first model. </br>
 * Trained the model using the standardized training data. </br>
 
-```python
-kn = KNeighborsClassifier(n_neighbors=6)
-
-kn.fit(train_scaled, train_target)
-```
-
 * Tested the model using three manually created input examples: </br>
 
   * Bream-like input: `[40, 1000]` </br>
   * Smelt-like input: `[9, 6]` </br>
   * Roach-like input: `[23, 160]` </br>
-
-```python
-new_scaled1 = ([40, 1000] - mean) / std # bream data
-new_scaled2 = ([9, 6] - mean) / std # smelt data
-new_scaled3 = ([23, 160] - mean) / std # roach data
-
-print("Prediction 1:", kn.predict([new_scaled1]))
-print("Prediction 2:", kn.predict([new_scaled2]))
-print("Prediction 3:", kn.predict([new_scaled3]))
-
-print("Accuracy:", kn.score(test_scaled, test_target))
-```
 
 ### 4.5 First Model Result </br>
 
@@ -164,20 +114,12 @@ print("Accuracy:", kn.score(test_scaled, test_target))
 
 #### First Model Output </br>
 
-<!-- Add your first model output screenshot here -->
-
-<img width="" height="" alt="First model output" src="" /> </br>
+<img width="171" height="67" alt="image" src="https://github.com/user-attachments/assets/dfc1c860-9795-4dec-830c-d7ff7d24e628" />
 
 ## 5. Result Analysis of the First Model </br>
 
 * Used `kn.kneighbors()` to identify the nearest neighbors of the new prediction inputs. </br>
 * Visualized the training data, new input points, and nearest neighbors using `matplotlib`. </br>
-
-```python
-distances1, indexes1 = kn.kneighbors([new_scaled1])
-distances2, indexes2 = kn.kneighbors([new_scaled2])
-distances3, indexes3 = kn.kneighbors([new_scaled3])
-```
 
 * The visualization showed that the data points were densely distributed. </br>
 * Because KNN depends on distance between data points, dense or overlapping data distributions can make classification more difficult. </br>
@@ -185,9 +127,7 @@ distances3, indexes3 = kn.kneighbors([new_scaled3])
 
 #### First Model Visualization </br>
 
-<!-- Add your first visualization screenshot here -->
-
-<img width="" height="" alt="First model visualization" src="" /> </br>
+<img width="468" height="244" alt="image" src="https://github.com/user-attachments/assets/4c84165c-10f2-42d3-9fa9-7a08f23cb725" /> </br>
 
 ## 6. Second Model Implementation: Three Fish Species </br>
 
@@ -204,29 +144,10 @@ distances3, indexes3 = kn.kneighbors([new_scaled3])
   * `Length2` </br>
   * `Weight` </br>
 
-```python
-bream_length = df.iloc[2:36, 3].astype(float)
-smelt_length = df.iloc[146:160, 3].astype(float)
-roach_length = df.iloc[36:56, 3].astype(float)
-
-bream_weight = df.iloc[2:36, 1].astype(float)
-smelt_weight = df.iloc[146:160, 1].astype(float)
-roach_weight = df.iloc[36:56, 1].astype(float)
-```
-
 ### 6.2 Feature and Target Reconstruction </br>
 
 * Combined the selected fish data into a new dataset. </br>
 * Reconstructed the target labels for the three selected fish species. </br>
-
-```python
-length = bream_length.tolist() + roach_length.tolist() + smelt_length.tolist()
-weight = bream_weight.tolist() + roach_weight.tolist() + smelt_weight.tolist()
-
-fish_data = [[l, w] for l, w in zip(length, weight)]
-
-fish_target = [0]*35 + [1]*20 + [6]*14
-```
 
 * The target labels were: </br>
 
@@ -240,53 +161,17 @@ fish_target = [0]*35 + [1]*20 + [6]*14
 * Used 50 samples for training and the remaining samples for testing. </br>
 * Applied standardization using the training data mean and standard deviation. </br>
 
-```python
-np.random.seed(42)
-index = np.arange(len(input_arr))
-
-np.random.shuffle(index)
-
-train_input = input_arr[index[:50]]
-train_target = target_arr[index[:50]]
-test_input = input_arr[index[50:]]
-test_target = target_arr[index[50:]]
-
-mean = np.mean(train_input, axis=0)
-std = np.std(train_input, axis=0)
-
-train_scaled = (train_input - mean) / std
-test_scaled = (test_input - mean) / std
-```
-
 ### 6.4 Model Training and Prediction </br>
 
 * Created a new KNN classifier. </br>
 * Set `n_neighbors=3` for the second model. </br>
 * Trained the model using the standardized training data. </br>
 
-```python
-kn = KNeighborsClassifier(n_neighbors=3)
-
-kn.fit(train_scaled, train_target)
-```
-
 * Tested the model using the same manually created examples: </br>
 
   * Bream-like input: `[40, 1000]` </br>
   * Smelt-like input: `[9, 6]` </br>
   * Roach-like input: `[23, 160]` </br>
-
-```python
-new_scaled1 = ([40, 1000] - mean) / std # bream -> 0
-new_scaled2 = ([9, 6] - mean) / std # smelt -> 6
-new_scaled3 = ([23, 160] - mean) / std # roach -> 1
-
-print("Prediction 1:", kn.predict([new_scaled1]))
-print("Prediction 2:", kn.predict([new_scaled2]))
-print("Prediction 3:", kn.predict([new_scaled3]))
-
-print("Accuracy:", kn.score(test_scaled, test_target))
-```
 
 ## 7. Second Model Result </br>
 
@@ -298,9 +183,7 @@ print("Accuracy:", kn.score(test_scaled, test_target))
 
 #### Second Model Output </br>
 
-<!-- Add your second model output screenshot here -->
-
-<img width="" height="" alt="Second model output" src="" /> </br>
+<img width="229" height="78" alt="image" src="https://github.com/user-attachments/assets/a2b81830-8be6-4576-91d3-909818fbb5a4" /> </br>
 
 ## 8. Visualization of Nearest Neighbors </br>
 
@@ -312,44 +195,21 @@ print("Accuracy:", kn.score(test_scaled, test_target))
   * Smelt prediction </br>
   * Roach prediction </br>
 
-```python
-plt.scatter(train_scaled[:, 0], train_scaled[:, 1], color='gray', label='Training data', alpha=0.6)
-
-plt.scatter(new_scaled1[0], new_scaled1[1], color='red', marker='o', s=100, label='Bream (new)')
-plt.scatter(new_scaled2[0], new_scaled2[1], color='blue', marker='o', s=100, label='Smelt (new)')
-plt.scatter(new_scaled3[0], new_scaled3[1], color='green', marker='o', s=100, label='Roach (new)')
-
-plt.xlabel('Length (standardized)')
-plt.ylabel('Weight (standardized)')
-plt.title('Visualization of Fish Data - New Predictions and Their Nearest Neighbors')
-plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.grid(True)
-plt.show()
-```
-
 #### Overall Visualization </br>
 
-<!-- Add your overall visualization screenshot here -->
-
-<img width="" height="" alt="Overall visualization" src="" /> </br>
+<img width="291" height="151" alt="image" src="https://github.com/user-attachments/assets/6a8ea2ab-761c-440c-9383-38b13e0efb0b" /> </br>
 
 #### Bream Prediction Visualization </br>
 
-<!-- Add your Bream visualization screenshot here -->
-
-<img width="" height="" alt="Bream prediction visualization" src="" /> </br>
+<img width="278" height="155" alt="image" src="https://github.com/user-attachments/assets/c0650244-9fd3-441b-9459-f647cf6c3549" /> </br>
 
 #### Smelt Prediction Visualization </br>
 
-<!-- Add your Smelt visualization screenshot here -->
-
-<img width="" height="" alt="Smelt prediction visualization" src="" /> </br>
+<img width="267" height="145" alt="image" src="https://github.com/user-attachments/assets/71005a26-c9d8-4ad7-af87-ab9a1d2b5909" /> </br>
 
 #### Roach Prediction Visualization </br>
 
-<!-- Add your Roach visualization screenshot here -->
-
-<img width="" height="" alt="Roach prediction visualization" src="" /> </br>
+<img width="278" height="146" alt="image" src="https://github.com/user-attachments/assets/035883d6-b13a-4e10-9566-d78eca4be767" /> </br>
 
 ## 9. Model Evaluation </br>
 
