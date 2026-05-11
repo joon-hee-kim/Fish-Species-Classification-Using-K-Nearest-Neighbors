@@ -253,6 +253,12 @@ This project helped us understand the importance of checking model results visua
 
 ## 11. Open Source SW </br>
 
+### Repository Structure </br>
+
+* `README.md` — Project overview, implementation process, model results, visualizations, and learning experience. </br>
+* `Fish Species Classification Using K-Nearest Neighbors (fail).py` — First KNN implementation using seven fish species. </br>
+* `Fish Species Classification Using K-Nearest Neighbors (success).py` — Revised KNN implementation using three selected fish species. </br>
+
 * Created a machine learning classification model using Python. </br>
 * Used open-source Python libraries for data handling, numerical computation, machine learning, and visualization. </br>
 * Used an open fish dataset from GitHub. </br>
