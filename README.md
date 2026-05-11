@@ -4,7 +4,7 @@ This is the result of an artificial intelligence team project that predicts fish
 
 ## Motivation
 
-Our team initiated this project to apply a machine learning classification algorithm to a simple structured dataset. While exploring possible datasets, we selected a fish dataset because it contained multiple fish species and numerical features that could be used for classification.
+Our team initiated this project to apply a machine learning classification algorithm to a simple numerical dataset. While exploring possible datasets, we selected a fish dataset because it contained multiple fish species and numerical features that could be used for classification.
 
 Using the Fish.csv dataset, we aimed to predict fish species based on two numerical features: `Weight` and `Length2`. We selected the K-Nearest Neighbors (KNN) algorithm because it is intuitive, simple to implement, and suitable for classification problems with relatively low data complexity.
 
